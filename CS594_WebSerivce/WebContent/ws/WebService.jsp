@@ -90,5 +90,6 @@
 			</form>
 		</c:if>
 	</c:if>
+	<a href="ShowWSGraph">Response Time Graph</a>
 </body>
 </html>

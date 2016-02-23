@@ -130,40 +130,31 @@ public class WebService extends HttpServlet {
 			WebServiceURL += "&User=" + user;
 			long lStartTime;
 			long lEndTime;
-			lStartTime = System.nanoTime() / 1000000;
-			WebServiceCall.WSCall(WebServiceURL);
-			lEndTime = System.nanoTime() / 1000000;
 
-			Connection con = null;
-			Statement stmt = null;
+			for (int i = 0; i < Integer.parseInt(user); i++) {
+				lStartTime = System.nanoTime() / 1000000;
+				WebServiceCall.WSCall(WebServiceURL);
+				System.out.println(i);
+				lEndTime = System.nanoTime() / 1000000;
 
-			try {
-				con = DBConnectWS.getConnection();
-				stmt = con.createStatement();
+				Connection con = null;
+				Statement stmt = null;
 
-				String rs1 = "insert into webservice(WebServiceURl,user,start_time,end_time) values(?,?,?,?)";
-				PreparedStatement psquery = con.prepareStatement(rs1);
-				psquery.setString(1, WebServiceURL);
-				psquery.setString(2, user);
-				psquery.setLong(3, lStartTime);
-				psquery.setLong(4, lEndTime);
-				psquery.executeUpdate();
-
-				// c.close();
-				// getServletContext().setAttribute("ApartmentDetailsLMS",
-				// entries);
-			} catch (SQLException e) {
 				try {
-					throw new ServletException(e);
-				} catch (ServletException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-			} finally {
-				try {
+					con = DBConnectWS.getConnection();
+					stmt = con.createStatement();
 
-					stmt.close();
-					con.close();
+					String rs1 = "insert into webservice(WebServiceURl,user,start_time,end_time) values(?,?,?,?)";
+					PreparedStatement psquery = con.prepareStatement(rs1);
+					psquery.setString(1, WebServiceURL);
+					psquery.setInt(2, i);
+					psquery.setLong(3, lStartTime);
+					psquery.setLong(4, lEndTime);
+					psquery.executeUpdate();
+
+					// c.close();
+					// getServletContext().setAttribute("ApartmentDetailsLMS",
+					// entries);
 				} catch (SQLException e) {
 					try {
 						throw new ServletException(e);
@@ -171,9 +162,21 @@ public class WebService extends HttpServlet {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
+				} finally {
+					try {
+
+						stmt.close();
+						con.close();
+					} catch (SQLException e) {
+						try {
+							throw new ServletException(e);
+						} catch (ServletException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+					}
 				}
 			}
-
 			System.out.println(WebServiceURL);
 			response.sendRedirect("WebService.jsp");
 		}
