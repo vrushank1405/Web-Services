@@ -1,10 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
 <!DOCTYPE html>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <html>
 <head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 
 
 <link rel="stylesheet"
@@ -20,10 +21,9 @@
 	integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS"
 	crossorigin="anonymous"></script>
 
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>CS594</title>
 </head>
-<body class="container">
+<body>
 	<header class="page-header">
 		<h3>CS594 - System Engineering</h3>
 	</header>
@@ -37,18 +37,18 @@
 				<div class="panel-body">
 
 					<section class="col-lg-12">
-						<form action="WebService?id=0" method="post">
+						<form action="WebServiceOpen?id=0" method="post">
 							<div class="col-lg-3">Web Service</div>
 							<div class="col-lg-9">
-								<c:choose>
-									<c:when test="${WebServiceURL != null }">
-										<input class="form-control" type="text" name="webServiceUrl"
-											value="${WebServiceURL}" />
-									</c:when>
-									<c:otherwise>
-										<input class="form-control" type="text" name="webServiceUrl" />
-									</c:otherwise>
-								</c:choose>
+								<select name="WSName" class="form-control">
+									<c:forEach items="${WebServiceDD}" var="entry">
+
+										<option value="${entry.webServiceUrl}">${entry.webServiceUrl}</option>
+
+
+									</c:forEach>
+								</select>
+
 							</div>
 							<br />
 							<div class="col-lg-12">
@@ -58,6 +58,9 @@
 
 						</form>
 					</section>
+
+
+
 				</div>
 			</div>
 
@@ -69,12 +72,12 @@
 					<section class="col-lg-12">
 						<div class="col-lg-3">Method</div>
 						<div class="col-lg-9">
-							<c:if test="${WSMethod != null}">
-								<form class="col-lg-12" action="WebService?id=1" method="post">
+							<c:if test="${WSMethodOpen != null}">
+								<form class="col-lg-12" action="WebServiceOpen?id=1" method="post">
 									<select name="MethodName" class="form-control">
-										<c:forEach items="${WSMethod}" var="entry">
+										<c:forEach items="${WSMethodOpen}" var="entry">
 											<c:choose>
-												<c:when test="${entry.methodId == MethodId}">
+												<c:when test="${entry.methodId == MethodIdOpen}">
 													<option value="${entry.methodId}" selected="selected">${entry.methodName}</option>
 												</c:when>
 												<c:otherwise>
@@ -105,11 +108,11 @@
 
 					<section class="col-lg-12">
 						<br />
-						<c:if test="${ WSParameter != null}">
-							<c:if test="${parameterShow != 0 }">
-								<form action="WebService?id=2" method="post">
-									<c:forEach items="${WSParameter}" var="entry">
-										<c:if test="${entry.methodId == MethodId}">
+						<c:if test="${ WSParameterOpen != null}">
+							<c:if test="${parameterShowOpen != 0 }">
+								<form action="WebServiceOpen?id=2" method="post">
+									<c:forEach items="${WSParameterOpen}" var="entry">
+										<c:if test="${entry.methodId == MethodIdOpen}">
 											<div class="col-lg-3">${entry.parameterName}</div>
 											<div class="col-lg-9">
 												<input class="form-control" type="text"
@@ -135,9 +138,7 @@
 				</div>
 			</div>
 
-			<a href="ShowWSGraph">Response Time Graph</a><br /> <a
-				href="WebServiceOpen">Open</a><br /> <a
-				href="ShowWebService">Show</a>
+			<a href="ShowWSGraph">Response Time Graph</a>
 		</div>
 	</div>
 </body>

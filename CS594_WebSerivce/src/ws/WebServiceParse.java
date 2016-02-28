@@ -12,7 +12,18 @@ public class WebServiceParse {
 	int user;
 	long startTime;
 	long endTime;
+	long responseTime;
 	
+	public WebServiceParse(int id, String webServiceUrl){
+		this.id = id;
+		this.webServiceUrl = webServiceUrl;
+	}
+	
+	public WebServiceParse(String wsurl, long responseTime){
+		this.webServiceUrl = wsurl;
+		this.responseTime = responseTime;
+		
+	}
 	public WebServiceParse(int id, String wsurl, int user, long start_time, long end_time){
 		this.id = id;
 		this.webServiceUrl= wsurl;
@@ -32,8 +43,18 @@ public class WebServiceParse {
 		this.parameterName = parameterName;
 		this.methodId = methodId;
 	}
+	
+	
 
 	
+	public long getResponseTime() {
+		return responseTime;
+	}
+
+	public void setResponseTime(long responseTime) {
+		this.responseTime = responseTime;
+	}
+
 	public int getId() {
 		return id;
 	}

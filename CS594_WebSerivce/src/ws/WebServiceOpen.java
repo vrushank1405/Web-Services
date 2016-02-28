@@ -15,41 +15,72 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import ws.DBConnectWS;
-
 /**
- * Servlet implementation class WebService
+ * Servlet implementation class WebServiceOpen
  */
-@WebServlet("/ws/WebService")
-public class WebService extends HttpServlet {
+@WebServlet("/ws/WebServiceOpen")
+public class WebServiceOpen extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	static String Url = "";
+	static int UrlId = 0;
 	static String URLValue = "";
 	static int methodIdActive = 0;
 	static String methodName = "";
 	int methodParamCount = 0;
+       
+    /**
+     * @see HttpServlet#HttpServlet()
+     */
+    public WebServiceOpen() {
+        super();
+        // TODO Auto-generated constructor stub
+    }
 
 	/**
-	 * @see HttpServlet#HttpServlet()
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
-	public WebService() {
-		super();
-		// TODO Auto-generated constructor stub
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		List<WebServiceParse> entries = new ArrayList<WebServiceParse>();
+		Connection con1 = null;
+		Statement stmt1 = null;
+		ResultSet rs = null;
+		try {
+			con1 = DBConnectWS.getConnection();
+			stmt1 = con1.createStatement();
+
+			rs = stmt1.executeQuery("select * from webservice");
+
+			while (rs.next()) {
+
+				WebServiceParse wsdetail = new WebServiceParse(rs.getInt("id"),rs.getString("webservice_url"));
+				entries.add(wsdetail);
+			}
+			rs.close();
+			// c.close();
+			// getServletContext().setAttribute("ApartmentDetailsLMS", entries);
+		} catch (SQLException e) {
+			throw new ServletException(e);
+		} finally {
+			try {
+
+				stmt1.close();
+				con1.close();
+			} catch (SQLException e) {
+				throw new ServletException(e);
+			}
+		}
+		getServletContext().setAttribute("WebServiceDD", entries);
+		request.getRequestDispatcher("/ws/WebServiceOpen.jsp").forward(request,
+				response);
+
 	}
 
 	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
-	 *      response)
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
-	protected void doGet(HttpServletRequest request,
-			HttpServletResponse response) throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-	}
-
-	protected void doPost(HttpServletRequest request,
-			HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-
 		int id = Integer.parseInt(request.getParameter("id"));
 
 		if (id == 0) {
@@ -57,7 +88,8 @@ public class WebService extends HttpServlet {
 			List<WebServiceParse> wsp = new ArrayList<WebServiceParse>();
 			int methodCount = 1;
 			int parameterCount = 1;
-			String url = request.getParameter("webServiceUrl");
+			String url = request.getParameter("WSName");
+			
 			URLValue = url;
 			javaxt.webservices.WSDL wsdl = new javaxt.webservices.WSDL(url);
 			for (javaxt.webservices.Service service : wsdl.getServices()) {
@@ -85,22 +117,22 @@ public class WebService extends HttpServlet {
 					methodCount++;
 				}
 			}
-			getServletContext().setAttribute("WebServiceURL", URLValue);
-			getServletContext().setAttribute("WSMethod", wsm);
-			getServletContext().setAttribute("WSParameter", wsp);
-			getServletContext().setAttribute("parameterShow", 0);
-			response.sendRedirect("WebService.jsp");
+			getServletContext().setAttribute("WebServiceURLOpen", URLValue);
+			getServletContext().setAttribute("WSMethodOpen", wsm);
+			getServletContext().setAttribute("WSParameterOpen", wsp);
+			getServletContext().setAttribute("parameterShowOpen", 0);
+			response.sendRedirect("WebServiceOpen.jsp");
 		} else if (id == 1) {
 			int methodId = Integer.parseInt(request.getParameter("MethodName"));
 			methodIdActive = methodId;
-			getServletContext().setAttribute("MethodId", methodId);
-			getServletContext().setAttribute("WebServiceURL", URLValue);
-			getServletContext().setAttribute("parameterShow", 1);
-			response.sendRedirect("WebService.jsp");
+			getServletContext().setAttribute("MethodIdOpen", methodId);
+			getServletContext().setAttribute("WebServiceURLOpen", URLValue);
+			getServletContext().setAttribute("parameterShowOpen", 1);
+			response.sendRedirect("WebServiceOpen.jsp");
 		} else if (id == 2) {
 			String user = request.getParameter("User");
 			List<WebServiceParse> wsm = (ArrayList<WebServiceParse>) getServletContext()
-					.getAttribute("WSMethod");
+					.getAttribute("WSMethodOpen");
 			for (WebServiceParse row : wsm) {
 				if (row.getMethodId() == methodIdActive) {
 					methodName = row.getMethodName();
@@ -109,7 +141,7 @@ public class WebService extends HttpServlet {
 			}
 
 			List<WebServiceParse> wsp = (ArrayList<WebServiceParse>) getServletContext()
-					.getAttribute("WSParameter");
+					.getAttribute("WSParameterOpen");
 			String[] mylist = new String[methodParamCount];
 			int arrcnt = 0;
 			for (WebServiceParse entry : wsp) {
@@ -138,15 +170,6 @@ public class WebService extends HttpServlet {
 
 			try {
 				con = DBConnectWS.getConnection();
-				Statement stmt1 = con.createStatement();
-
-				String rs1 = "insert into webservice(webservice_url) values(?)";
-				PreparedStatement psquery = con.prepareStatement(rs1);
-				psquery.setString(1, URLValue);
-				psquery.executeUpdate();
-
-				stmt1.close();
-
 				stmt = con.createStatement();
 
 				ResultSet rs = stmt
@@ -223,7 +246,10 @@ public class WebService extends HttpServlet {
 				}
 			}
 			//System.out.println(WebServiceURL);
-			response.sendRedirect("WebService.jsp");
+			response.sendRedirect("WebServiceOpen.jsp");
 		}
 	}
+
+	
+
 }
