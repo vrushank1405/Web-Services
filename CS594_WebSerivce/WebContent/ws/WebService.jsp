@@ -24,16 +24,50 @@
 <title>CS594</title>
 </head>
 <body class="container">
-	<header class="page-header">
+	<!-- <header class="page-header">
 		<h3>CS594 - System Engineering</h3>
-	</header>
+	</header> -->
+
+	<nav class="navbar navbar-inverse">
+		<div class="container-fluid">
+
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed"
+					data-toggle="collapse" data-target="#bs-example-navbar-collapse-1"
+					aria-expanded="false">
+					<span class="sr-only">Toggle navigation</span> <span
+						class="icon-bar"></span> <span class="icon-bar"></span> <span
+						class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="WebService.jsp" style="color: white;">CS594
+					- System Engineering </a>
+			</div>
+
+			<div class="collapse navbar-collapse"
+				id="bs-example-navbar-collapse-1">
+				<ul class="nav navbar-nav">
+					<li class="active"><a href="WebService.jsp">Create<span
+							class="sr-only">(current)</span></a></li>
+					<li><a href="WebServiceOpen">Open</a></li>
+					<li><a href="ShowWebService">Show</a></li>
+					<li><a href="ShowWSGraph">Response Time Graph</a></li>
+
+				</ul>
+			</div>
+
+		</div>
+	</nav>
+
+	<!-- MAIN  -->
 	<div class="row">
 
 		<div class="col-lg-12">
 
 
-			<div class="panel panel-primary">
-				<div class="panel-heading">Web Service</div>
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<b>Web Service</b>
+				</div>
 				<div class="panel-body">
 
 					<section class="col-lg-12">
@@ -61,15 +95,17 @@
 				</div>
 			</div>
 
+			<c:if test="${WSMethod != null}">
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<b>Method</b>
+					</div>
+					<div class="panel-body">
 
-			<div class="panel panel-primary">
-				<div class="panel-heading">Method</div>
-				<div class="panel-body">
+						<section class="col-lg-12">
+							<div class="col-lg-3">Method</div>
+							<div class="col-lg-9">
 
-					<section class="col-lg-12">
-						<div class="col-lg-3">Method</div>
-						<div class="col-lg-9">
-							<c:if test="${WSMethod != null}">
 								<form class="col-lg-12" action="WebService?id=1" method="post">
 									<select name="MethodName" class="form-control">
 										<c:forEach items="${WSMethod}" var="entry">
@@ -89,24 +125,26 @@
 											type='submit' value='Show Parameter'></input>
 									</div>
 								</form>
-							</c:if>
-						</div>
-					</section>
+
+							</div>
+						</section>
 
 
+					</div>
 				</div>
-			</div>
+			</c:if>
 
+			<c:if test="${ WSParameter != null}">
+				<c:if test="${parameterShow != 0 }">
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<b>Parameters</b>
+						</div>
+						<div class="panel-body">
 
+							<section class="col-lg-12">
+								<br />
 
-			<div class="panel panel-primary">
-				<div class="panel-heading">Parameters</div>
-				<div class="panel-body">
-
-					<section class="col-lg-12">
-						<br />
-						<c:if test="${ WSParameter != null}">
-							<c:if test="${parameterShow != 0 }">
 								<form action="WebService?id=2" method="post">
 									<c:forEach items="${WSParameter}" var="entry">
 										<c:if test="${entry.methodId == MethodId}">
@@ -127,17 +165,17 @@
 											type='submit' value='Save To Database'></input>
 									</div>
 								</form>
-							</c:if>
-						</c:if>
-					</section>
+
+							</section>
 
 
-				</div>
-			</div>
-
-			<a href="ShowWSGraph">Response Time Graph</a><br /> <a
+						</div>
+					</div>
+				</c:if>
+			</c:if>
+			<!-- <a href="ShowWSGraph">Response Time Graph</a><br /> <a
 				href="WebServiceOpen">Open</a><br /> <a
-				href="ShowWebService">Show</a>
+				href="ShowWebService">Show</a> -->
 		</div>
 	</div>
 </body>
