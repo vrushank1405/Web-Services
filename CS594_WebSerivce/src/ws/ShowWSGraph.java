@@ -81,6 +81,7 @@ public class ShowWSGraph extends HttpServlet {
 		
 		int count = Integer.parseInt(request.getParameter("NoOfProjects").toString());
 		List<WebServiceParse> entries = new ArrayList<WebServiceParse>();
+		
 		Connection con1 = null;
 		Statement stmt1 = null;
 		ResultSet rs = null;

@@ -5,7 +5,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-
+<script type="text/javascript" src="../jquery-1.9.1.min.js"></script>
 
 <link rel="stylesheet"
 	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"
@@ -19,7 +19,42 @@
 	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"
 	integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS"
 	crossorigin="anonymous"></script>
-
+<style>
+#divLoading
+{
+display : none;
+}
+#divLoading.show
+{
+display : block;
+position : fixed;
+z-index: 100;
+background-image : url('../loader.gif');
+background-color:#666;
+opacity : 0.4;
+background-repeat : no-repeat;
+background-position : center;
+left : 0;
+bottom : 0;
+right : 0;
+top : 0;
+}
+#loadinggif.show
+{
+left : 50%;
+top : 50%;
+position : absolute;
+z-index : 101;
+width : 32px;
+height : 32px;
+margin-left : -16px;
+margin-top : -16px;
+}
+div.content {
+width : 1000px;
+height : 1000px;
+}
+</style>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>CS594</title>
 </head>
@@ -49,7 +84,7 @@
 					<li class="active"><a href="WebService.jsp">Create<span
 							class="sr-only">(current)</span></a></li>
 					<li><a href="WebServiceOpen">Open</a></li>
-					<li><a href="ShowWebService">Show</a></li>
+					<li><a href="ShowWebService">Project Management</a></li>
 					<li><a href="ShowWSGraph">Response Time Graph</a></li>
 
 				</ul>
@@ -150,19 +185,19 @@
 										<c:if test="${entry.methodId == MethodId}">
 											<div class="col-lg-3">${entry.parameterName}</div>
 											<div class="col-lg-9">
-												<input class="form-control" type="text"
+												<input class="form-control" type="text" required="required"
 													name="${entry.parameterName}" /><br />
 											</div>
 										</c:if>
 									</c:forEach>
 									<div class="col-lg-3">User</div>
 									<div class="col-lg-9">
-										<input class="form-control" type='text' name="User"></input>
+										<input class="form-control" required="required" type='text' name="User"></input>
 									</div>
 									<div class="col-lg-12">
 										<br /> <input
 											class="btn btn-primary  text-center center-block"
-											type='submit' value='Save To Database'></input>
+											type='submit' onclick="return ShowLoader();" value='Save To Database'></input>
 									</div>
 								</form>
 
@@ -178,5 +213,17 @@
 				href="ShowWebService">Show</a> -->
 		</div>
 	</div>
+	<div id="divLoading"></div><!-- <img src="../loader2.gif"  style="display:none"> -->
+	<c:if test="${ShowLoader == 1 }">
+	<script>
+	 $("div#divLoading").addClass('hide');
+	</script>
+	</c:if>
+	<script>
+	function ShowLoader(){
+		//alert("fffg");
+		 $("div#divLoading").addClass('show');
+	}
+	</script>
 </body>
 </html>

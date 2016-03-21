@@ -246,6 +246,7 @@ public class WebServiceOpen extends HttpServlet {
 				}
 			}
 			//System.out.println(WebServiceURL);
+			getServletContext().setAttribute("ShowLoader", 1);
 			response.sendRedirect("WebServiceOpen.jsp");
 		}
 	}

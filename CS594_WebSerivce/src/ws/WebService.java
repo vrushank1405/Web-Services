@@ -63,26 +63,28 @@ public class WebService extends HttpServlet {
 			for (javaxt.webservices.Service service : wsdl.getServices()) {
 				// System.out.println(service.getName());
 				Url = service.getURL();
-
-				for (javaxt.webservices.Method method : service.getMethods()) {
-					int count = 0;
-					// System.out.println(" - " + method.getName());
-					javaxt.webservices.Parameters parameters = method
-							.getParameters();
-					if (parameters != null) {
-						for (javaxt.webservices.Parameter parameter : parameters
-								.getArray()) {
-							wsp.add(new WebServiceParse(parameterCount,
-									parameter.getName(), methodCount));
-							count++;
-							// System.out.println("   * " +
-							// parameter.getName());
-							parameterCount++;
+				if (service.getMethods() != null) {
+					for (javaxt.webservices.Method method : service
+							.getMethods()) {
+						int count = 0;
+						// System.out.println(" - " + method.getName());
+						javaxt.webservices.Parameters parameters = method
+								.getParameters();
+						if (parameters != null) {
+							for (javaxt.webservices.Parameter parameter : parameters
+									.getArray()) {
+								wsp.add(new WebServiceParse(parameterCount,
+										parameter.getName(), methodCount));
+								count++;
+								// System.out.println("   * " +
+								// parameter.getName());
+								parameterCount++;
+							}
 						}
+						wsm.add(new WebServiceParse(methodCount, method
+								.getName(), count, 0));
+						methodCount++;
 					}
-					wsm.add(new WebServiceParse(methodCount, method.getName(),
-							count, 0));
-					methodCount++;
 				}
 			}
 			getServletContext().setAttribute("WebServiceURL", URLValue);
@@ -181,7 +183,7 @@ public class WebService extends HttpServlet {
 			for (int i = 0; i < Integer.parseInt(user); i++) {
 				lStartTime = System.nanoTime() / 1000000;
 				WebServiceCall.WSCall(WebServiceURL);
-				//System.out.println(i);
+				// System.out.println(i);
 				lEndTime = System.nanoTime() / 1000000;
 
 				Connection conn = null;
@@ -222,7 +224,8 @@ public class WebService extends HttpServlet {
 
 				}
 			}
-			//System.out.println(WebServiceURL);
+			// System.out.println(WebServiceURL);
+			getServletContext().setAttribute("ShowLoader", 1);
 			response.sendRedirect("WebService.jsp");
 		}
 	}

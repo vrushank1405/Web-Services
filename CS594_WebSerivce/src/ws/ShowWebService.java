@@ -34,7 +34,14 @@ public class ShowWebService extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
+		int webid = 0;
+		if(request.getParameter("Id") != null){
+			webid = Integer.parseInt(request.getParameter("Id"));
+		}
+		
+		List<WebServiceParse> row = new ArrayList<WebServiceParse>();
 		List<WebServiceParse> entries = new ArrayList<WebServiceParse>();
+		
 		Connection con1 = null;
 		Statement stmt1 = null;
 		ResultSet rs = null;
@@ -50,6 +57,20 @@ public class ShowWebService extends HttpServlet {
 				entries.add(wsdetail);
 			}
 			rs.close();
+			stmt1.close();
+			
+			Statement stmt = con1.createStatement();;
+			ResultSet rs1 = null;
+			rs1 = stmt.executeQuery("select avg(response_time) as rt, webserviceid from fnalpractice.webserviceresponse wsr inner join fnalpractice.webservice ws on ws.id = wsr.webserviceid where webserviceid = '"+webid+"'");
+			
+			while (rs1.next()) {
+
+				WebServiceParse wsdetail = new WebServiceParse(rs1.getString("webserviceid"),
+						rs1.getLong("rt"));
+				row.add(wsdetail);
+			}
+			rs1.close();
+			stmt.close();
 			// c.close();
 			// getServletContext().setAttribute("ApartmentDetailsLMS", entries);
 		} catch (SQLException e) {
@@ -57,13 +78,14 @@ public class ShowWebService extends HttpServlet {
 		} finally {
 			try {
 
-				stmt1.close();
+				//stmt1.close();
 				con1.close();
 			} catch (SQLException e) {
 				throw new ServletException(e);
 			}
 		}
 		getServletContext().setAttribute("ShowWebServiceDD", entries);
+		getServletContext().setAttribute("ShowWebServiceIndividualGraph", row);
 		request.getRequestDispatcher("/ws/ShowWebService.jsp").forward(request,
 				response);
 
